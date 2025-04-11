@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DAO;
+
 import Modelo.Producto;
 import Util.ConexionDB;
 import java.sql.Connection;
@@ -11,12 +12,14 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author Dell Notebook
  */
-    public class ProductoDAO {
-         public void crearProducto(Producto producto) throws SQLException {
+public class ProductoDAO {
+
+    public void crearProducto(Producto producto) throws SQLException {
         String sql = """
             INSERT INTO Productos (
                 nombre_producto, 
@@ -27,8 +30,7 @@ import java.util.List;
                 imagen
             ) VALUES (?, ?, ?, ?, ?, ?)""";
 
-        try (Connection c = ConexionDB.getConnection();
-             PreparedStatement stmt = c.prepareStatement(sql)) {
+        try (Connection c = ConexionDB.getConnection(); PreparedStatement stmt = c.prepareStatement(sql)) {
             stmt.setString(1, producto.getNombreProducto());
             stmt.setString(2, producto.getDescripcionProducto());
             stmt.setInt(3, producto.getIdCategoria());
@@ -38,13 +40,12 @@ import java.util.List;
             stmt.executeUpdate();
         }
     }
-         public List<Producto> leerTodosProductos() throws SQLException {
+
+    public List<Producto> leerTodosProductos() throws SQLException {
         String sql = "SELECT * FROM Productos";
         List<Producto> productos = new ArrayList<>();
 
-        try (Connection c = ConexionDB.getConnection();
-             PreparedStatement stmt = c.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (Connection c = ConexionDB.getConnection(); PreparedStatement stmt = c.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Producto producto = new Producto();
                 producto.setIdProducto(rs.getInt("id_producto"));
@@ -63,16 +64,16 @@ import java.util.List;
     public static void main(String[] args) {
         try {
             ProductoDAO dao = new ProductoDAO();
-         List<Producto> productos = dao.leerTodosProductos();
+            List<Producto> productos = dao.leerTodosProductos();
             System.out.println("Lista de productos:");
             for (Producto prod : productos) {
-                System.out.println("ID: " + prod.getIdProducto() + 
-                                 ", Nombre: " + prod.getNombreProducto() + 
-                                 ", Descripción: " + prod.getDescripcionProducto() + 
-                                 ", Categoría ID: " + prod.getIdCategoria() + 
-                                 ", Precio: " + prod.getPrecioUnitario() + 
-                                 ", Stock: " + prod.getStock() + 
-                                 ", Imagen: " + prod.getImagen());
+                System.out.println("ID: " + prod.getIdProducto()
+                        + ", Nombre: " + prod.getNombreProducto()
+                        + ", Descripción: " + prod.getDescripcionProducto()
+                        + ", Categoría ID: " + prod.getIdCategoria()
+                        + ", Precio: " + prod.getPrecioUnitario()
+                        + ", Stock: " + prod.getStock()
+                        + ", Imagen: " + prod.getImagen());
             }
         } catch (SQLException e) {
             System.err.println("Error: " + e.getMessage());
