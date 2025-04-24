@@ -10,33 +10,41 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
-
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author Dell Notebook
+ * @author StanChad
  */
 public class CompraDAO {
 
-    public void crearCompra(Compra compra) throws SQLException {
+    public int crearCompra(Compra compra) throws SQLException {
         String sql = """
         INSERT INTO Compras (
             id_empleado, 
             fecha_compra, 
             total_compra
         ) VALUES (?, ?, ?)""";
+        int generatedId = -1;
 
-        try (Connection c = ConexionDB.getConnection(); PreparedStatement stmt = c.prepareStatement(sql)) {
+        try (Connection c = ConexionDB.getConnection(); PreparedStatement stmt = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, compra.getIdEmpleado());
             stmt.setDate(2, new java.sql.Date(compra.getFechaCompra().getTime()));
             stmt.setFloat(3, compra.getTotalCompra());
             stmt.executeUpdate();
-        }
-    }
 
+            // Obtener el ID generado
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                }
+            }
+        }
+        return generatedId;
+    }
     public void actualizarCompra(Compra compra) throws SQLException {
         String sql = "UPDATE Compras SET id_empleado = ?, fecha_compra = ?, total_compra = ? WHERE id_compra = ?";
 

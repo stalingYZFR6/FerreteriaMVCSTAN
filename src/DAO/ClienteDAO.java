@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  *
- * @author Dell Notebook
+ * @author StanChad
  */
 public class ClienteDAO {
 

@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  *
- * @author Dell Notebook
+ * @author StalingCHAD
  */
 public class CategoriaDAO {
 

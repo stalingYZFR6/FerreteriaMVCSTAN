@@ -33,6 +33,26 @@ public class UsuarioDAO {
         }
     }
 
+    public void actualizarUsuario(Usuario usuario) throws SQLException {
+        String sql = "UPDATE Usuarios SET usuario = ?, contraseña = ? WHERE id_usuario = ?";
+
+        try (Connection c = ConexionDB.getConnection(); PreparedStatement stmt = c.prepareStatement(sql)) {
+            stmt.setString(1, usuario.getUsuario());
+            stmt.setString(2, usuario.getContrasena());
+            stmt.setInt(3, usuario.getIdUsuario());
+            stmt.executeUpdate();
+        }
+    }
+
+    public void eliminarUsuario(int idUsuario) throws SQLException {
+        String sql = "DELETE FROM Usuarios WHERE id_usuario = ?";
+
+        try (Connection c = ConexionDB.getConnection(); PreparedStatement stmt = c.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.executeUpdate();
+        }
+    }
+
     public List<Usuario> leerTodosUsuarios() throws SQLException {
         String sql = "SELECT * FROM Usuarios";
         List<Usuario> usuarios = new ArrayList<>();
@@ -52,13 +72,13 @@ public class UsuarioDAO {
     public static void main(String[] args) {
         try {
             UsuarioDAO dao = new UsuarioDAO();
-            List<Usuario> usuarios = dao.leerTodosUsuarios();
-            System.out.println("Lista de usuarios:");
-            for (Usuario usu : usuarios) {
-                System.out.println("ID: " + usu.getIdUsuario()
-                        + ", Usuario: " + usu.getUsuario()
-                        + ", Contraseña: " + usu.getContrasena());
-            }
+            Usuario usuario = new Usuario();
+            usuario.setIdUsuario(1); // ID existente
+            usuario.setUsuario("nuevo_usuario");
+            usuario.setContrasena("nueva_contraseña");
+            dao.actualizarUsuario(usuario);
+            System.out.println("Usuario actualizado.");
+
         } catch (SQLException e) {
             System.err.println("Error: " + e.getMessage());
         }
